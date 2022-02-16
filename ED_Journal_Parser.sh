@@ -22,7 +22,6 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 		#       Universal Cartographics Profit : puts all the credits per transaction in csv sheet.
 		"ucp" )
 			cat "$journal" | grep MultiSellExplorationData | jq . | grep TotalEarnings | sed -e 's/\"TotalEarnings\":\ //g' > "$output.csv";;
-		#	Help
 	esac
 # 	Help mode.
 elif [ "$mode" == "help" ]; then 

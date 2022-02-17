@@ -18,10 +18,12 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 	case "$mode" in
 		#       Universal Cartographics Mode : puts all the listed system names in csv sheet.
 		"uc" ) 
-			cat "$journal" | grep MultiSellExplorationData | jq . | grep SystemName | sed -e 's/\"SystemName\"\: //g' > "$output.csv";;
+			printf "System Name,\n" > "$output.csv"
+			cat "$journal" | grep MultiSellExplorationData | jq . | grep SystemName | sed -e 's/\"SystemName\"\: //g' >> "$output.csv";;
 		#       Universal Cartographics Profit : puts all the credits per transaction in csv sheet.
 		"ucp" )
-			cat "$journal" | grep MultiSellExplorationData | jq . | grep TotalEarnings | sed -e 's/\"TotalEarnings\":\ //g' > "$output.csv";;
+			printf "Credit Profits,\n" > "$output.csv"
+			cat "$journal" | grep MultiSellExplorationData | jq . | grep TotalEarnings | sed -e 's/\"TotalEarnings\":\ //g' >> "$output.csv";;
 	esac
 # 	Help mode.
 elif [ "$mode" == "help" ]; then 

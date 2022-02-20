@@ -7,7 +7,7 @@
 #							#
 #-------------------------------------------------------#
 
-helpinfo="help:\n<script> [mode] <input> <output>\nModes\nassist : Assistance Mode gives you help on finding the Journal Files\nuc : Universal Cartographics Mode\nucp : Universal Cartographics Profit Mode\n";
+helpinfo="help:\n<script> [mode] <input> <output>\nModes\nuc : Universal Cartographics Mode\nucp : Universal Cartographics Profit Mode\n\n\nC:\Users\<User Name>\Saved Games\Frontier Developments\Elite Dangerous\ is the Usual location to find the Journal\nAlternatively you can use journals downloaded from your own Journal Limpet at https://journal-limpet.com/\n";
 
 mode="$1" && pwdir="$2" && journal="$3" && output="$4";
 
@@ -25,9 +25,6 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 			printf "Credit Profits,\n" > "$output.csv"
 			cat "$journal" | grep MultiSellExplorationData | jq . | grep TotalEarnings | sed -e 's/\"TotalEarnings\":\ //g' >> "$output.csv";;
 	esac
-elif [ "$mode" == "assist" ]; then 
-	printf "assistance mode\n" >&2
-	printf "C:\Users\<User Name>\Saved Games\Frontier Developments\Elite Dangerous\ is the Usual location to find the Journal\nAlternatively you can use journals downloaded from your own Journal Limpet at https://journal-limpet.com/\n";
 # 	Help mode.
 elif [ "$mode" == "help" ]; then 
 	printf "Help mode Called!\n" >&2

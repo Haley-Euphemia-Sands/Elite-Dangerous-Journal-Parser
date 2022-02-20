@@ -7,7 +7,7 @@
 #							#
 #-------------------------------------------------------#
 
-helpinfo="help:\n<script> [mode] <input> <output>\nModes\nuc : Universal Cartographics Mode\nucp : Universal Cartographics Profit Mode\n\n\nC:\Users\<User Name>\Saved Games\Frontier Developments\Elite Dangerous\ is the Usual location to find the Journal\nAlternatively you can use journals downloaded from your own Journal Limpet at https://journal-limpet.com/\n";
+helpinfo="help:\n<script> [mode] <working dir> <input> <output>\nModes\nuc : Universal Cartographics Mode\nucp : Universal Cartographics Profit Mode\n\n\nC:\Users\<User Name>\Saved Games\Frontier Developments\Elite Dangerous\ is the Usual location to find the Journal\nAlternatively you can use journals downloaded from your own Journal Limpet at https://journal-limpet.com/\n";
 
 mode="$1" && pwdir="$2" && journal="$3" && output="$4";
 

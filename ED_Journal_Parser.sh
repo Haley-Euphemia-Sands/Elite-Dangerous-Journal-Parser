@@ -7,7 +7,7 @@
 #							#
 #-------------------------------------------------------#
 
-helpinfo="help:\n<script> [mode] <working dir> <input> <output>\nModes\nuc : Universal Cartographics Mode\nucp : Universal Cartographics Profit Mode\n\n\nC:\Users\<User Name>\Saved Games\Frontier Developments\Elite Dangerous\ is the Usual location to find the Journal\nAlternatively you can use journals downloaded from your own Journal Limpet at https://journal-limpet.com/\n";
+helpinfo="help:\n<script> [mode] <working dir> <input> <output>\nModes\nuc : Universal Cartographics Mode\nucp : Universal Cartographics Profit Mode\nmsg : Message History Mode\n\n\nC:\Users\<User Name>\Saved Games\Frontier Developments\Elite Dangerous\ is the Usual location to find the Journal\nAlternatively you can use journals downloaded from your own Journal Limpet at https://journal-limpet.com/\n";
 
 mode="$1" && pwdir="$2" && journal="$3" && output="$4";
 
@@ -24,6 +24,10 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 		"ucp" )
 			printf "Credit Profits,\n" > "$output.csv"
 			cat "$journal" | grep MultiSellExplorationData | jq . | grep TotalEarnings | sed -e 's/\"TotalEarnings\":\ //g' >> "$output.csv";;
+		"msg" )
+			printf "Message Mode\n" >&2
+			printf "Message History,\n" > "$output.csv"
+			cat Journal.backup.2021.log | grep Message | jq . | grep Message | sed -e 's/\"Message\"://g' | sed -e 's/\"Message_Localised\"://g' >> "$output.csv"
 	esac
 # 	Help mode.
 elif [ "$mode" == "help" ]; then 

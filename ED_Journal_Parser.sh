@@ -29,7 +29,7 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 		"msg" )
 			printf "Message Mode\n" >&2
 			printf "Message History,\n" > "$output.csv"
-			cat Journal.backup.2021.log | grep Message | jq . | grep Message | sed -e 's/\"Message\"://g' | sed -e 's/\"Message_Localised\"://g' >> "$output.csv"
+			cat "$journal" | grep Message | jq . | grep Message | sed -e 's/\"Message\"://g' | sed -e 's/\"Message_Localised\"://g' >> "$output.csv"
 	esac
 # 	Help mode.
 elif [ "$mode" == "help" ]; then 

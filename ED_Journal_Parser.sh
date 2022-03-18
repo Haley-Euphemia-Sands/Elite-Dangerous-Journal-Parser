@@ -29,7 +29,20 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 		"msg" )
 			printf "Message Mode\n" >&2
 			printf "Message History,\n" > "$output.csv"
-			cat "$journal" | grep Message | jq . | grep Message | sed -e 's/\"Message\"://g' | sed -e 's/\"Message_Localised\"://g' >> "$output.csv"
+			cat "$journal" | grep Message | jq . | grep Message | sed -e 's/\"Message\"://g' | sed -e 's/\"Message_Localised\"://g' >> "$output.csv";;
+		"muc" )
+			cat "$journal" | jq '. | select((.TerraformState == "Terraformable") and (.WasMapped == false)).BodyName' >> "$output.json"
+			cat "$journal" | jq '. | select((.PlanetClass == "Earthlike body") and (.WasMapped == false)).BodyName' >> "$output.json"
+			cat "$journal" | jq '. | select((.PlanetClass == "Ammonia world") and (.WasMapped == false)).BodyName' >> "$output.json"
+			cat "$journal" | jq '. | select((.PlanetClass == "Water world") and (.WasMapped == false).)BodyName' >> "$output.json";;
+		"tmuc" )
+			cat "$journal" | jq '. | select((.TerraformState == "Terraformable") and (.WasMapped == false)).BodyName' >> "$output.json";;
+		"emuc" )
+			cat "$journal" | jq '. | select((.PlanetClass == "Earthlike body") and (.WasMapped == false)).BodyName' >> "$output.json";;
+		"amuc" )
+			cat "$journal" | jq '. | select((.PlanetClass == "Ammonia world") and (.WasMapped == false)).BodyName' >> "$output.json";;
+		"wmuc" ) 
+			cat "$journal" | jq '. | select((.PlanetClass == "Water world") and (.WasMapped == false)).BodyName' >> "$output.json";;
 	esac
 # 	Help mode.
 elif [ "$mode" == "help" ]; then 

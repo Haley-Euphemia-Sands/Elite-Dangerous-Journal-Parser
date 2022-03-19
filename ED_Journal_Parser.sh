@@ -21,16 +21,16 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 		"uc" ) 
 			printf "Universal Cartographic Mode\n" >&2
 			printf "System Name,\n" > "$output.csv"
-			cat "$journal" |  jq '. | select(.event == "MultiSellExplorationData").SystemName' >> "$output.csv";;
+			jq '. | select(.event == "MultiSellExplorationData").SystemName' $journal >> "$output.csv";;
 		#       Universal Cartographics Profit : puts all the credits per transaction in csv sheet.
 		"ucp" )
 			printf "Universal Cartographics Profit Mode\n" >&2
 			printf "Credit Profits,\n" > "$output.csv"
-			cat "$journal" | jq '. |  select(event == "MultiSellExplorationData).TotalEarnings ' >> "$output.csv";;
+			jq '. |  select(event == "MultiSellExplorationData).TotalEarnings ' $journal >> "$output.csv";;
 		"msg" )
 			printf "Message Mode\n" >&2
 			printf "Message History,\n" > "$output.csv"
-			cat "$journal" | jq '. | select((.event == "ReceiveText") or (.event == "SendText")).Message' >> "$output.csv";;
+			jq '. | select((.event == "ReceiveText") or (.event == "SendText")).Message' $journal >> "$output.csv";;
 		"muc" )
 			printf "$mucm Mode\n" >&2
 			comm -13 <(jq  '. | select(.event == "SAAScanComplete").BodyName' $journal | sort -u) <(jq '. | select((.TerraformState == "Terraformable") or (.PlanetClass == "Earthlike body") or (.PlanetClass == "Ammonia world") or (.PlanetClass == "Water world")).BodyName' $journal | sort -u) >> "$output";;

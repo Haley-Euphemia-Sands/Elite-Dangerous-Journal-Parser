@@ -1,6 +1,8 @@
 # Elite-Dangerous-Journal-Parser
 A Bash script for returning various datapoints from Elite Dangerous journal Log
 
+## To use
+The script uses `jq` so make sure to install it first on Debian Based Systems just use `sudo apt install jq`
 
 ## TODO:
 

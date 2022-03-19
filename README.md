@@ -18,8 +18,7 @@ Lists all message history both recieved and sent.
 Missed Universal Cartographics mode e.g. `<script> muc <working dir> <journal> <output>`
 Lists all Terraformable, Water worlds, Ammonia worlds, and Earth-like worlds you have scanned with the FSS but haven't mapped.
 
-There is more targeted versions of Missed Universal Cartographics mode focusing on those individual planet types however it currently doesn't output those so rewriting of that part of the script is needed.
-
+For the missed cartographics mode for just focusing on Terraformables, Water Worlds, Earth-likes, and Ammonia worlds replace `muc` with `tmuc`, `wmuc`, `emuc`, and `amuc` respectivily.
 
 
 ## TODO:

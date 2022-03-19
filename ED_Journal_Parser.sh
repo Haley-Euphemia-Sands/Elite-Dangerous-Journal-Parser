@@ -36,16 +36,16 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 			comm -13 <(jq  '. | select(.event == "SAAScanComplete").BodyName' $journal | sort -u) <(jq '. | select((.TerraformState == "Terraformable") or (.PlanetClass == "Earthlike body") or (.PlanetClass == "Ammonia world") or (.PlanetClass == "Water world")).BodyName' $journal | sort -u) >> "$output";;
 		"tmuc" )
 			printf "$mucm - Terraformable Mode\n" >&2
-			cat "$journal" | jq '. | select((.TerraformState == "Terraformable") and (.WasMapped == false)).BodyName' >> "$output.json";;
+			comm -13 <(jq '. | select(.event == "SAAScanComplete").BodyName' $journal | sort -u) <(jq '. | select(.TerraformState == "Terraformable").BodyName' $journal | sort -u >> "$output";;
 		"emuc" )
 			printf "$mucm - Earth-like Mode\n" >&2
-			cat "$journal" | jq '. | select((.PlanetClass == "Earthlike body") and (.WasMapped == false)).BodyName' >> "$output.json";;
+			comm -13 <(jq '. | select(.event == "SAAScanComplete").BodyName' $journal | sort -u) <(jq '. | select(.PlanetClass == "Earthlike body").BodyName' $journal | sort -u >> "$output";;
 		"amuc" )
 			printf "$mucm - Ammonia World Mode\n" >&2
-			cat "$journal" | jq '. | select((.PlanetClass == "Ammonia world") and (.WasMapped == false)).BodyName' >> "$output.json";;
+			comm -13 <(jq '. | select(.event == "SAAScanComplete").BodyName' $journal | sort -u) <(jq '. | select(.PlanetClass == "Ammonia world").BodyName' $journal | sort -u >> "$output";;
 		"wmuc" ) 
 			printf "$mucm - Water World Mode\n" >&2
-			cat "$journal" | jq '. | select((.PlanetClass == "Water world") and (.WasMapped == false)).BodyName' >> "$output.json";;
+			comm -13 <(jq '. | select(.event == "SAAScanComplete").BodyName' $journal | sort -u) <(jq '. | select(.PlanetClass == "Water world").BodyName' $journal | sort -u >> "$output";;
 	esac
 # 	Help mode.
 elif [ "$mode" == "help" ]; then 

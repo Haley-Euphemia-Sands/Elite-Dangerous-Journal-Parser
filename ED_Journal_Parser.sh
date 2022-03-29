@@ -34,6 +34,9 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 			jq '. | select((.event == "ReceiveText") or (.event == "SendText")).Message' $journal >> "$output";;
 		"muc" )
 			printf "Missed Universal Cartographics Mode\n" >&2
+			if [ "$submode" == "" ]; then 
+				submode=aetw
+			fi
 			if [ "$(printf "$submode" | grep t)" != "" ] || [ "$(printf "$submode" | grep T)" != "" ]; then 
 				jq '. | select(.TerraformState == "Terraformable").BodyName' $journal >> working.tmp; 
 			fi

@@ -8,7 +8,7 @@
 #							#
 #-------------------------------------------------------#
 
-helpinfo="help:\n<script> [mode] <working dir> <input> <output>\nModes\nuc : Universal Cartographics Mode\nucp : Universal Cartographics Profit Mode\nmsg : Message History Mode\nmuc : Missed Universal Cartographics Mode \n- lists Bodies you have discovered but not mapped that are Terraformable, Water Worlds, Ammonia Worlds, and Earthlike.\ntmuc emuc amuc wmuc : same as muc just terraformable only, eartlikes only, ammonia worlds only, and water worlds only respectivily \n\n\nC:\\Users\\<User Name>\\Saved Games\\Frontier Developments\\Elite Dangerous\\ is the Usual location to find the Journal\nAlternatively you can use journals downloaded from your own Journal Limpet at https://journal-limpet.com/\n"
+helpinfo="help:\n<script> [mode] <working dir> <input> <output> <submode>\nModes\nuc : Universal Cartographics Mode\nucp : Universal Cartographics Profit Mode\nmsg : Message History Mode\nmuc : Missed Universal Cartographics Mode \n- lists Bodies you have discovered but not mapped that are Terraformable, Water Worlds, Ammonia Worlds, and Earthlike.\n the submode can be a/A w/W e/E t/T for Ammonia, Water, Earth-like, and Terraformable worlds it shouldn't matter what order as long as there are no spaces. \n\n\nC:\\Users\\<User Name>\\Saved Games\\Frontier Developments\\Elite Dangerous\\ is the Usual location to find the Journal\nAlternatively you can use journals downloaded from your own Journal Limpet at https://journal-limpet.com/\n"
 mucm="Missed Universal Cartographics"
 
 mode="$1" && pwdir="$2" && journal="$3" && output="$4" && submode=$5;
@@ -35,23 +35,12 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 			jq '. | select((.event == "ReceiveText") or (.event == "SendText")).Message' $journal >> "$output.csv";;
 		"muc" )
 			printf "$mucm Mode\n" >&2
-			if [ (printf "$submode" | grep t) != "" || (printf "$submode" | grep T) != "" ]; then terra=1; else terra=0 fi
-			if [ (printf "$submode" | grep e) != "" || (printf "$submode" | grep E) != "" ]; then earth=1; else earth=0 fi
-			if [ (printf "$submode" | grep w) != "" || (printf "$submode" | grep W) != "" ]; then water=1; else water=0 fi
-			if [ (printf "$submode" | grep a) != "" || (printf "$submode" | grep A) != "" ]; then aw=1; else aw=0 fi
-			comm -13 <(jq  '. | select(.event == "SAAScanComplete").BodyName' $journal | sort -u) <(jq '. | select((.TerraformState == "Terraformable") or (.PlanetClass == "Earthlike body") or (.PlanetClass == "Ammonia world") or (.PlanetClass == "Water world")).BodyName' $journal | sort -u) >> "$output";;
-		"tmuc" )
-			printf "$mucm - Terraformable Mode\n" >&2
-			comm -13 <(jq '. | select(.event == "SAAScanComplete").BodyName' $journal | sort -u) <(jq '. | select(.TerraformState == "Terraformable").BodyName' $journal | sort -u >> "$output";;
-		"emuc" )
-			printf "$mucm - Earth-like Mode\n" >&2
-			comm -13 <(jq '. | select(.event == "SAAScanComplete").BodyName' $journal | sort -u) <(jq '. | select(.PlanetClass == "Earthlike body").BodyName' $journal | sort -u >> "$output";;
-		"amuc" )
-			printf "$mucm - Ammonia World Mode\n" >&2
-			comm -13 <(jq '. | select(.event == "SAAScanComplete").BodyName' $journal | sort -u) <(jq '. | select(.PlanetClass == "Ammonia world").BodyName' $journal | sort -u >> "$output";;
-		"wmuc" ) 
-			printf "$mucm - Water World Mode\n" >&2
-			comm -13 <(jq '. | select(.event == "SAAScanComplete").BodyName' $journal | sort -u) <(jq '. | select(.PlanetClass == "Water world").BodyName' $journal | sort -u >> "$output";;
+			if [ (printf "$submode" | grep t) != "" || (printf "$submode" | grep T) != "" ]; then jq '. | select(.TerraformState == "Terraformable").BodyName' < $journal >> working.tmp; fi
+			if [ (printf "$submode" | grep e) != "" || (printf "$submode" | grep E) != "" ]; then jq '. | select(.PlanetClass == "Earthlike body").BodyName' < $journal >> working.tmp ; fi
+			if [ (printf "$submode" | grep w) != "" || (printf "$submode" | grep W) != "" ]; then jq '. | select(.PlanetClass == "Water world").BodyName' < $journal >> working.tmp; fi
+			if [ (printf "$submode" | grep a) != "" || (printf "$submode" | grep A) != "" ]; then jq '. | select(.PlanetClass == "Ammonia world").BodyName' < $journal >> working.tmp; fi
+			comm -13 <(jq  '. | select(.event == "SAAScanComplete").BodyName' $journal | sort -u) <(sort -u < working.tmp) >> "$output";;
+			rm working.tmp
 	esac
 # 	Help mode.
 elif [ "$mode" == "help" ]; then 

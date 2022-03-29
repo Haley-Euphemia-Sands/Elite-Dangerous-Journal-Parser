@@ -21,21 +21,49 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 		#       Universal Cartographics Mode : puts all the listed system names in csv sheet.
 		"uc" ) 
 			printf "Universal Cartographic Mode\n" >&2
-			printf "System Name,\n" > "$output.csv"
+			printf "System Name,\n" > "$output"
 			jq '. | select(.event == "MultiSellExplorationData").SystemName' $journal >> "$output";;
 		#       Universal Cartographics Profit : puts all the credits per transaction in csv sheet.
 		"ucp" )
 			printf "Universal Cartographics Profit Mode\n" >&2
-			printf "Credit Profits,\n" > "$output.csv"
+			printf "Credit Profits,\n" > "$output"
 			jq '. |  select(event == "MultiSellExplorationData).TotalEarnings ' $journal >> "$output";;
 		"msg" )
 			printf "Message Mode\n" >&2
-			printf "Message History,\n" > "$output.txt"
-			jq '. | select((.event == "ReceiveText") or (.event == "SendText")).Message' $journal >> "$output";;
+			printf "Message History,\n" > "$output"
+			if [ "$(printf "$submode" | grep n)" != ""] || [ "$(printf "$submode" | grep N)" != "" ]; then 
+				inclnpc=1
+			fi
+			if [ "$(printf "$submode" | grep s)" != "" ] || [ "$(printf "$submode" | grep S)" != ""]; then
+				inclself=1
+			fi
+			if [ "$(printf "$submode" | grep p)" != ""] || [ "$(printf "$submode" | grep P)" != ""]; then 
+				inclplayers=1
+			fi
+			if [ $inclnpc != 1] && [ $inclself != 1] && [ $inclplayers !=1]; then
+				inclnpc=1
+				inclself=1
+				inclplayers=1
+			fi
+			if [ $inclnpc == 1 ] && [ $inclself == 1] && [ $inclplayers == 1 ]; then 
+				jq '. | select((.event == "ReceiveText") or (.event == "SendText")).Message' $journal >> $output
+			elif [ $inclnpc != 1 ] && [ $inclself == 1 ] && [ $inclplayers == 1 ]; then 
+				jq '. | select(((.event == "ReceiveText") and (.Channel != "npc")) or (.event == "SendText")).Message' $journal >> $output
+			elif [ $inclnpc == 1 ] && [ $inclself !=1 ] && [ $inclplayers == 1 ]; then
+				jq '. | select(.event == "ReceiveText").Message' $journal >> $output
+			elif [ $inclnpc == 1 ] && [ $inclself == 1 ] && [ $inclplayers != 1 ]; then 
+				jq '. | select(((.event == ReceiveText") and (.Channel == "npc")) or (.event == "SendText")).Message' $journal >> $output
+			elif [ $inclnpc != 1 ] && [ $inclself != 1 ] && [ $inclplayers == 1 ]; then
+				jq '. | select((.event == "ReceiveText") and (.Channel != "npc")).Message' $journal >> $output
+			elif [ $inclnpc == 1 ] && [ $inclself != 1 ] && [ $inclplayers != 1 ]; then
+				jq '. | select((.event == "ReceiveText") and (.Channel == "npc")).Message' $journal >> $output
+			else
+				jq '. | select(.event == "SendText").Message' $journal >> $output
+			fi
 		"muc" )
 			printf "Missed Universal Cartographics Mode\n" >&2
 			if [ "$submode" == "" ]; then 
-				submode=aetw
+				submode="aetw"
 			fi
 			if [ "$(printf "$submode" | grep t)" != "" ] || [ "$(printf "$submode" | grep T)" != "" ]; then 
 				jq '. | select(.TerraformState == "Terraformable").BodyName' $journal >> working.tmp; 

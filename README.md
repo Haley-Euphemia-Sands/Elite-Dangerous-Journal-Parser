@@ -16,9 +16,10 @@ Message mode e.g. `<script> msg <working dir> <journal> <output>`
 Lists all message history both recieved and sent.
 
 Missed Universal Cartographics mode e.g. `<script> muc <working dir> <journal> <output>`
-Lists all Terraformable, Water worlds, Ammonia worlds, and Earth-like worlds you have scanned with the FSS but haven't mapped.
+Lists planets you have scanned with FSS but haven't mapped, to select which class to list you can use t or T for Terraformable, w or W for Water worlds, e or E for Earth-likes, and a or A for Ammonia worlds.
+`<script> muc <working dir> <journal> <output> aTWe` is as valid as `<script> muc <working dir> <journal> <output> tWeA` an order doesn't matter as long as there are no spaces.
 
-For the missed cartographics mode for just focusing on Terraformables, Water Worlds, Earth-likes, and Ammonia worlds replace `muc` with `tmuc`, `wmuc`, `emuc`, and `amuc` respectivily.
+
 
 
 ## TODO:

@@ -9,32 +9,31 @@
 #-------------------------------------------------------#
 
 helpinfo="help:\n<script> [mode] <working dir> <input> <output> <submode>\nModes\nuc : Universal Cartographics Mode\nucp : Universal Cartographics Profit Mode\nmsg : Message History Mode\nmuc : Missed Universal Cartographics Mode \n- lists Bodies you have discovered but not mapped that are Terraformable, Water Worlds, Ammonia Worlds, and Earthlike.\n the submode can be a/A w/W e/E t/T for Ammonia, Water, Earth-like, and Terraformable worlds it shouldn't matter what order as long as there are no spaces. \n\n\nC:\\Users\\<User Name>\\Saved Games\\Frontier Developments\\Elite Dangerous\\ is the Usual location to find the Journal\nAlternatively you can use journals downloaded from your own Journal Limpet at https://journal-limpet.com/\n"
-mucm="Missed Universal Cartographics"
 
 mode="$1" && pwdir="$2" && journal="$3" && output="$4" && submode=$5;
 
 
 #	Check if the other arguments are a valid argument.
 if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
-	printf "mode = $mode\nworking dir = $pwdir\njournal = $journal\noutput = $output.csv\n" >&2
+	printf "mode = $mode\nworking dir = $pwdir\njournal = $journal\noutput = $output\n" >&2
 	cd "$pwdir"
 	case "$mode" in
 		#       Universal Cartographics Mode : puts all the listed system names in csv sheet.
 		"uc" ) 
 			printf "Universal Cartographic Mode\n" >&2
 			printf "System Name,\n" > "$output.csv"
-			jq '. | select(.event == "MultiSellExplorationData").SystemName' $journal >> "$output.csv";;
+			jq '. | select(.event == "MultiSellExplorationData").SystemName' $journal >> "$output";;
 		#       Universal Cartographics Profit : puts all the credits per transaction in csv sheet.
 		"ucp" )
 			printf "Universal Cartographics Profit Mode\n" >&2
 			printf "Credit Profits,\n" > "$output.csv"
-			jq '. |  select(event == "MultiSellExplorationData).TotalEarnings ' $journal >> "$output.csv";;
+			jq '. |  select(event == "MultiSellExplorationData).TotalEarnings ' $journal >> "$output";;
 		"msg" )
 			printf "Message Mode\n" >&2
 			printf "Message History,\n" > "$output.txt"
-			jq '. | select((.event == "ReceiveText") or (.event == "SendText")).Message' $journal >> "$output.csv";;
+			jq '. | select((.event == "ReceiveText") or (.event == "SendText")).Message' $journal >> "$output";;
 		"muc" )
-			printf "$mucm Mode\n" >&2
+			printf "Missed Universal Cartographics Mode\n" >&2
 			if [ "$(printf "$submode" | grep t)" != "" ] || [ "$(printf "$submode" | grep T)" != "" ]; then 
 				jq '. | select(.TerraformState == "Terraformable").BodyName' $journal >> working.tmp; 
 			fi

@@ -35,12 +35,20 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 			jq '. | select((.event == "ReceiveText") or (.event == "SendText")).Message' $journal >> "$output.csv";;
 		"muc" )
 			printf "$mucm Mode\n" >&2
-			if [ (printf "$submode" | grep t) != "" || (printf "$submode" | grep T) != "" ]; then jq '. | select(.TerraformState == "Terraformable").BodyName' < $journal >> working.tmp; fi
-			if [ (printf "$submode" | grep e) != "" || (printf "$submode" | grep E) != "" ]; then jq '. | select(.PlanetClass == "Earthlike body").BodyName' < $journal >> working.tmp ; fi
-			if [ (printf "$submode" | grep w) != "" || (printf "$submode" | grep W) != "" ]; then jq '. | select(.PlanetClass == "Water world").BodyName' < $journal >> working.tmp; fi
-			if [ (printf "$submode" | grep a) != "" || (printf "$submode" | grep A) != "" ]; then jq '. | select(.PlanetClass == "Ammonia world").BodyName' < $journal >> working.tmp; fi
-			comm -13 <(jq  '. | select(.event == "SAAScanComplete").BodyName' $journal | sort -u) <(sort -u < working.tmp) >> "$output";;
-			rm working.tmp
+			if [ "$(printf "$submode" | grep t)" != "" ] || [ "$(printf "$submode" | grep T)" != "" ]; then 
+				jq '. | select(.TerraformState == "Terraformable").BodyName' $journal >> working.tmp; 
+			fi
+			if [ "$(printf "$submode" | grep e)" != "" ] || [ "$(printf "$submode" | grep E)" != "" ]; then 
+				jq '. | select(.PlanetClass == "Earthlike body").BodyName' $journal >> working.tmp; 
+			fi
+			if [ "$(printf "$submode" | grep w)" != "" ] || [ "$(printf "$submode" | grep W)" != "" ]; then 
+				jq '. | select(.PlanetClass == "Water world").BodyName' $journal >> working.tmp; 
+			fi
+			if [ "$(printf "$submode" | grep a)" != "" ] || [ "$(printf "$submode" | grep A)" != "" ]; then 
+				jq '. | select(.PlanetClass == "Ammonia world").BodyName' $journal >> working.tmp; 
+			fi
+			comm -13 <(jq  '. | select(.event == "SAAScanComplete").BodyName' $journal | sort -u) <(sort -u < working.tmp) >> "$output"
+			rm working.tmp;;
 	esac
 # 	Help mode.
 elif [ "$mode" == "help" ]; then 

@@ -1,10 +1,9 @@
 # Elite-Dangerous-Journal-Parser
 A Bash script for returning various datapoints from Elite Dangerous journal Log
-\
+
 ## To use
 The script uses `jq` so make sure to install it first on Debian Based Systems just use `sudo apt install jq`
-\
-\
+
 ### The modes
 \
 Universal Cartographics mode e.g. `<script> uc <working dir> <journal> <output>` 
@@ -29,10 +28,7 @@ Lists planets you have scanned with FSS but haven't mapped.
 To select which class to list you can use t or T for Terraformable, w or W for Water worlds, e or E for Earth-likes, and a or A for Ammonia worlds.
 \
 `<script> muc <working dir> <journal> <output> aTWe` is as valid as `<script> muc <working dir> <journal> <output> tWeA` an order doesn't matter as long as there are no spaces.
-\
-\
-\
-\
+
 ## TODO:
 
 1. The ability to ignore sent or recieved messages with message history as well as whether to include npc or not

@@ -18,7 +18,7 @@ Lists the profits of every Universal Cartographics sold.
 \
 Message mode e.g. `<script> msg <working dir> <journal> <output>`
 \
-Lists all message history both recieved and sent.
+Lists all message history both recieved and sent. By default it will retrieve all messages, but n/N, s/S, and p/P can be added in submode to specify if you want npc, sent, and players messages respectivily.
 \
 \
 Missed Universal Cartographics mode e.g. `<script> muc <working dir> <journal> <output>`
@@ -31,7 +31,6 @@ To select which class to list you can use t or T for Terraformable, w or W for W
 
 ## TODO:
 
-1. The ability to ignore sent or recieved messages with message history as well as whether to include npc or not
-2. FSD jumps info
-3. Other Statistics
-4. May redo in C++.
+1. FSD jumps info
+2. Other Statistics
+3. May redo in C++.

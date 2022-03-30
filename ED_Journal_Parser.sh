@@ -30,7 +30,7 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 		"ucp" )
 			printf "Universal Cartographics Profit Mode\n" >&2
 			printf "Credit Profits,\n" > "$output"
-			jq '. |  select(event == "MultiSellExplorationData).TotalEarnings ' $journal >> "$output";;
+			jq '. |  select(event == "MultiSellExplorationData").TotalEarnings ' $journal >> "$output";;
 		"msg" )
 			printf "Message Mode\n" >&2
 			printf "Message History,\n" > "$output"

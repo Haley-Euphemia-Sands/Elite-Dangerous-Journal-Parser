@@ -2,23 +2,23 @@
 
 #-------------------------------------------------------#
 #							#
-#	argv | 1 = mode, 2 = the change to working dir,	#
-#	3 = journal filename, 4 = output filename. 	#
+#	argv | 4 = mode, 1 = the change to working dir,	#
+#	2 = journal filename, 3 = output filename. 	#
 #			5 = Submode			#
 #							#
 #-------------------------------------------------------#
 
 
 helpcall() {
-	printf "help:\n<script> [mode] <working dir> <input> <output> <submode>\nModes\nuc : Universal Cartographics Mode\nucp : Universal Cartographics Profit Mode\nmsg : Message History Mode\nmuc : Missed Universal Cartographics Mode \n- lists Bodies you have discovered but not mapped that are Terraformable, Water Worlds, Ammonia Worlds, and Earthlike.\n the submode can be a/A w/W e/E t/T for Ammonia, Water, Earth-like, and Terraformable worlds it shouldn't matter what order as long as there are no spaces. \n\n\nC:\\Users\\<User Name>\\Saved Games\\Frontier Developments\\Elite Dangerous\\ is the Usual location to find the Journal\nAlternatively you can use journals downloaded from your own Journal Limpet at https://journal-limpet.com/\n"
+	printf "help:\n<script> <working dir> <input> <output> [mode] [submode]\nModes\nuc : Universal Cartographics Mode\nucp : Universal Cartographics Profit Mode\nmsg : Message History Mode\nmuc : Missed Universal Cartographics Mode \n- lists Bodies you have discovered but not mapped that are Terraformable, Water Worlds, Ammonia Worlds, and Earthlike.\n the submode can be a/A w/W e/E t/T for Ammonia, Water, Earth-like, and Terraformable worlds it shouldn't matter what order as long as there are no spaces. \n\n\nC:\\Users\\<User Name>\\Saved Games\\Frontier Developments\\Elite Dangerous\\ is the Usual location to find the Journal\nAlternatively you can use journals downloaded from your own Journal Limpet at https://journal-limpet.com/\n"
 }
 
-mode="$1" && pwdir="$2" && journal="$3" && output="$4" && submode=$5;
+mode="$4" && pwdir="$1" && journal="$2" && output="$3" && submode=$5;
 
 
 #	Check if the other arguments are a valid argument.
 if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
-	printf "mode = $mode\nworking dir = $pwdir\njournal = $journal\noutput = $output\n" >&2
+	printf "mode = $mode\nsubmode = $submode\nworking dir = $pwdir\njournal = $journal\noutput = $output\n" >&2
 	cd "$pwdir"
 	case "$mode" in
 		#       Universal Cartographics Mode : puts all the listed system names in csv sheet.

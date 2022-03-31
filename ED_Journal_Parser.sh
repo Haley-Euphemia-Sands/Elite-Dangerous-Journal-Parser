@@ -34,8 +34,9 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 		"msg" )
 			printf "Message Mode\n" >&2
 			printf "Message History,\n" > "$output"
+			incl=0
 			if [ "$(printf "$submode" | grep n)" != ""] || [ "$(printf "$submode" | grep N)" != "" ]; then 
-				incl=100
+				let incl=($incl+100)
 			fi
 			if [ "$(printf "$submode" | grep s)" != "" ] || [ "$(printf "$submode" | grep S)" != "" ]; then
 				let incl=($incl+10)
@@ -48,13 +49,13 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 			fi
 			if [ $incl == 111 ]; then 
 				jq '. | select((.event == "ReceiveText") or (.event == "SendText")).Message' $journal >> $output
-			elif [ $incl == 011 ]; then 
+			elif [ $incl == 11 ]; then 
 				jq '. | select(((.event == "ReceiveText") and (.Channel != "npc")) or (.event == "SendText")).Message' $journal >> $output
 			elif [ $incl == 101 ]; then
 				jq '. | select(.event == "ReceiveText").Message' $journal >> $output
 			elif [ $incl == 110 ]; then 
 				jq '. | select(((.event == ReceiveText") and (.Channel == "npc")) or (.event == "SendText")).Message' $journal >> $output
-			elif [ $incl == 001 ]; then
+			elif [ $incl == 1 ]; then
 				jq '. | select((.event == "ReceiveText") and (.Channel != "npc")).Message' $journal >> $output
 			elif [ $incl == 100 ]; then
 				jq '. | select((.event == "ReceiveText") and (.Channel == "npc")).Message' $journal >> $output

@@ -35,30 +35,28 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 			printf "Message Mode\n" >&2
 			printf "Message History,\n" > "$output"
 			if [ "$(printf "$submode" | grep n)" != ""] || [ "$(printf "$submode" | grep N)" != "" ]; then 
-				inclnpc=1
+				incl=100
 			fi
-			if [ "$(printf "$submode" | grep s)" != "" ] || [ "$(printf "$submode" | grep S)" != ""]; then
-				inclself=1
+			if [ "$(printf "$submode" | grep s)" != "" ] || [ "$(printf "$submode" | grep S)" != "" ]; then
+				let incl=($incl+10)
 			fi
-			if [ "$(printf "$submode" | grep p)" != ""] || [ "$(printf "$submode" | grep P)" != ""]; then 
-				inclplayers=1
+			if [ "$(printf "$submode" | grep p)" != ""] || [ "$(printf "$submode" | grep P)" != "" ]; then 
+				let incl=($incl+1)
 			fi
-			if [ $inclnpc != 1] && [ $inclself != 1] && [ $inclplayers !=1]; then
-				inclnpc=1
-				inclself=1
-				inclplayers=1
+			if [ $incl == 0 ]; then
+				incl=111
 			fi
-			if [ $inclnpc == 1 ] && [ $inclself == 1] && [ $inclplayers == 1 ]; then 
+			if [ $incl == 111 ]; then 
 				jq '. | select((.event == "ReceiveText") or (.event == "SendText")).Message' $journal >> $output
-			elif [ $inclnpc != 1 ] && [ $inclself == 1 ] && [ $inclplayers == 1 ]; then 
+			elif [ $incl == 011 ]; then 
 				jq '. | select(((.event == "ReceiveText") and (.Channel != "npc")) or (.event == "SendText")).Message' $journal >> $output
-			elif [ $inclnpc == 1 ] && [ $inclself !=1 ] && [ $inclplayers == 1 ]; then
+			elif [ $incl == 101 ]; then
 				jq '. | select(.event == "ReceiveText").Message' $journal >> $output
-			elif [ $inclnpc == 1 ] && [ $inclself == 1 ] && [ $inclplayers != 1 ]; then 
+			elif [ $incl == 110 ]; then 
 				jq '. | select(((.event == ReceiveText") and (.Channel == "npc")) or (.event == "SendText")).Message' $journal >> $output
-			elif [ $inclnpc != 1 ] && [ $inclself != 1 ] && [ $inclplayers == 1 ]; then
+			elif [ $incl == 001 ]; then
 				jq '. | select((.event == "ReceiveText") and (.Channel != "npc")).Message' $journal >> $output
-			elif [ $inclnpc == 1 ] && [ $inclself != 1 ] && [ $inclplayers != 1 ]; then
+			elif [ $incl == 100 ]; then
 				jq '. | select((.event == "ReceiveText") and (.Channel == "npc")).Message' $journal >> $output
 			else
 				jq '. | select(.event == "SendText").Message' $journal >> $output

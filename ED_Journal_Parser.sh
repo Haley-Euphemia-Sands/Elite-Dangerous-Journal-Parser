@@ -10,6 +10,7 @@
 
 
 helpcall() {
+	printf "Help mode Called!\n" >&2
 	printf "help:\n<script> <working dir> <input> <output> [mode] [submode]\nModes\nuc : Universal Cartographics Mode\nucp : Universal Cartographics Profit Mode\nmsg : Message History Mode\nmuc : Missed Universal Cartographics Mode \n- lists Bodies you have discovered but not mapped that are Terraformable, Water Worlds, Ammonia Worlds, and Earthlike.\n the submode can be a/A w/W e/E t/T for Ammonia, Water, Earth-like, and Terraformable worlds it shouldn't matter what order as long as there are no spaces. \n\n\nC:\\Users\\<User Name>\\Saved Games\\Frontier Developments\\Elite Dangerous\\ is the Usual location to find the Journal\nAlternatively you can use journals downloaded from your own Journal Limpet at https://journal-limpet.com/\n"
 }
 
@@ -24,8 +25,11 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 		#       Universal Cartographics Mode : puts all the listed system names in csv sheet.
 		"uc" ) 
 			printf "Universal Cartographic Mode\n" >&2
-			printf "System Name,\n" > "$output"
-			jq '. | select(.event == "MultiSellExplorationData").SystemName' $journal >> "$output";;
+			printf "System Name, Profit\n" > "$output"
+			jq '. | select(.event == "MultiSellExplorationData") | (.Discovered[] | {SystemName} | .SystemName), .TotalEarnings' $journal >> "$output";;
+
+			#| cat CAPIJournal.211129000000.01.log| jq '. | select(.event == "MultiSellExplorationData") | (.Discovered[] | {SystemName} | .SystemName), .TotalEarnings' > ../Test.csv
+
 		#       Universal Cartographics Profit : puts all the credits per transaction in csv sheet.
 		"ucp" )
 			printf "Universal Cartographics Profit Mode\n" >&2
@@ -34,6 +38,7 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 		"msg" )
 			printf "Message Mode\n" >&2
 			printf "Message History,\n" > "$output"
+			# incl : 1xx = Include NPC Messages, x1x = Include messages sent, xx1 = Include messages from other players
 			incl=0
 			if [ "$(printf "$submode" | grep n)" != ""] || [ "$(printf "$submode" | grep N)" != "" ]; then 
 				let incl=($incl+100)
@@ -84,7 +89,6 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 	esac
 # 	Help mode.
 elif [ "$mode" == "help" ]; then 
-	printf "Help mode Called!\n" >&2
 	helpcall
 #	Displays help in the case that one or more arguments are invalid.
 else 

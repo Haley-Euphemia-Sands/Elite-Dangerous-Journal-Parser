@@ -26,7 +26,18 @@ if  [ "$pwdir" != "" ] && [ "$journal" != "" ] && [ "$output" != "" ]; then
 		"uc" ) 
 			printf "Universal Cartographic Mode\n" >&2
 			printf "System Name, Profit\n" > "$output"
-			jq '. | select(.event == "MultiSellExplorationData") | (.Discovered[] | {SystemName} | .SystemName), .TotalEarnings' $journal >> "$output";;
+			count=$(jq '. | select(.event == "MultiSellExplorationData") | (.Discovered[] | {SystemName} | .SystemName | length)' $journal)
+			raw=$(jq '. | select(.event == "MultiSellExplorationData") | (.Discovered[] | {SystemName} | .SystemName), .TotalEarnings' $journal)
+			offset=0
+			printf $count | while read lines; do
+				let length=($offset+$lines)
+				SystemList=$(printf "$raw" | head -l $length | tail -l $lines | sed -e 's/\n/ /g' )
+				let offset=$length
+				let length=$length+1
+				Profit=$(printf "$raw" | head -l $length | tail -l 1)
+			       	printf "$SystemList, $Profit,\n" >> $output
+				# store in var
+			done;;
 
 			#| cat CAPIJournal.211129000000.01.log| jq '. | select(.event == "MultiSellExplorationData") | (.Discovered[] | {SystemName} | .SystemName), .TotalEarnings' > ../Test.csv
 
